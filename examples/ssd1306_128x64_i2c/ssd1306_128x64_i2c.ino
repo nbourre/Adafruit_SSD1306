@@ -23,19 +23,23 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
-#define SCREEN_WIDTH 128 // OLED display width, in pixels
-#define SCREEN_HEIGHT 64 // OLED display height, in pixels
+#define SCREEN_WIDTH 128 // Largeur de l'écran OLED, en pixels
+#define SCREEN_HEIGHT 64 // Hauteur de l'écran OLED, en pixels
 
-// Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
-// The pins for I2C are defined by the Wire-library. 
-// On an arduino UNO:       A4(SDA), A5(SCL)
-// On an arduino MEGA 2560: 20(SDA), 21(SCL)
-// On an arduino LEONARDO:   2(SDA),  3(SCL), ...
-#define OLED_RESET     -1 // Reset pin # (or -1 if sharing Arduino reset pin)
-#define SCREEN_ADDRESS 0x3D ///< See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
+// Déclaration pour un affichage SSD1306 connecté à I2C (broches SDA, SCL)
+// Les broches pour I2C sont définies par la bibliothèque Wire.
+// Sur un Arduino UNO :       A4(SDA), A5(SCL)
+// Sur un Arduino MEGA 2560 : 20(SDA), 21(SCL)
+// Sur un Arduino LEONARDO :   2(SDA),  3(SCL), ...
+#define OLED_RESET     -1 // Numéro de la broche de réinitialisation (ou -1 si partageant la broche de réinitialisation de l'Arduino)
+
+// Adresse pour le modèle du cours : 0x3C;
+// Exécuter l'exemple i2c_scanner si cela ne fonctionne pas
+#define SCREEN_ADDRESS 0x3C ///< Voir la fiche technique pour l'adresse;
+
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
-#define NUMFLAKES     10 // Number of snowflakes in the animation example
+#define NUMFLAKES     10 // Nombre de flocons de neige dans l'exemple d'animation
 
 #define LOGO_HEIGHT   16
 #define LOGO_WIDTH    16
@@ -60,65 +64,65 @@ static const unsigned char PROGMEM logo_bmp[] =
 void setup() {
   Serial.begin(9600);
 
-  // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
+  // SSD1306_SWITCHCAPVCC = génère la tension d'affichage à partir de 3,3V en interne
   if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
-    Serial.println(F("SSD1306 allocation failed"));
-    for(;;); // Don't proceed, loop forever
+    Serial.println(F("Échec d'allocation SSD1306"));
+    for(;;); // Ne pas continuer, boucler indéfiniment
   }
 
-  // Show initial display buffer contents on the screen --
-  // the library initializes this with an Adafruit splash screen.
+  // Afficher le contenu initial du tampon d'affichage à l'écran --
+  // la bibliothèque l'initialise avec un écran d'accueil Adafruit.
   display.display();
-  delay(2000); // Pause for 2 seconds
+  delay(2000); // Pause de 2 secondes
 
-  // Clear the buffer
+  // Effacer le tampon
   display.clearDisplay();
 
-  // Draw a single pixel in white
+  // Dessiner un seul pixel en blanc
   display.drawPixel(10, 10, SSD1306_WHITE);
 
-  // Show the display buffer on the screen. You MUST call display() after
-  // drawing commands to make them visible on screen!
+  // Montrer le tampon d'affichage à l'écran. Vous DEVEZ appeler display() après
+  // les commandes de dessin pour les rendre visibles à l'écran!
   display.display();
   delay(2000);
-  // display.display() is NOT necessary after every single drawing command,
-  // unless that's what you want...rather, you can batch up a bunch of
-  // drawing operations and then update the screen all at once by calling
-  // display.display(). These examples demonstrate both approaches...
+  // display.display() n'est PAS nécessaire après chaque commande de dessin,
+  // à moins que c'est ce que vous voulez... plutôt, vous pouvez regrouper un tas de
+  // commandes de dessin puis mettre à jour l'écran en une seule fois en appelant
+  // display.display(). Ces exemples démontrent les deux approches...
 
-  testdrawline();      // Draw many lines
+  testdrawline();      // Dessiner plusieurs lignes
 
-  testdrawrect();      // Draw rectangles (outlines)
+  testdrawrect();      // Dessiner des rectangles (contours)
 
-  testfillrect();      // Draw rectangles (filled)
+  testfillrect();      // Dessiner des rectangles (pleins)
 
-  testdrawcircle();    // Draw circles (outlines)
+  testdrawcircle();    // Dessiner des cercles (contours)
 
-  testfillcircle();    // Draw circles (filled)
+  testfillcircle();    // Dessiner des cercles (pleins)
 
-  testdrawroundrect(); // Draw rounded rectangles (outlines)
+  testdrawroundrect(); // Dessiner des rectangles arrondis (contours)
 
-  testfillroundrect(); // Draw rounded rectangles (filled)
+  testfillroundrect(); // Dessiner des rectangles arrondis (pleins)
 
-  testdrawtriangle();  // Draw triangles (outlines)
+  testdrawtriangle();  // Dessiner des triangles (contours)
 
-  testfilltriangle();  // Draw triangles (filled)
+  testfilltriangle();  // Dessiner des triangles (pleins)
 
-  testdrawchar();      // Draw characters of the default font
+  testdrawchar();      // Dessiner des caractères de la police par défaut
 
-  testdrawstyles();    // Draw 'stylized' characters
+  testdrawstyles();    // Dessiner des caractères 'stylisés'
 
-  testscrolltext();    // Draw scrolling text
+  testscrolltext();    // Dessiner du texte défilant
 
-  testdrawbitmap();    // Draw a small bitmap image
+  testdrawbitmap();    // Dessiner une petite image bitmap
 
-  // Invert and restore display, pausing in-between
+  // Inverser et restaurer l'affichage, en faisant une pause entre les deux
   display.invertDisplay(true);
   delay(1000);
   display.invertDisplay(false);
   delay(1000);
 
-  testanimate(logo_bmp, LOGO_WIDTH, LOGO_HEIGHT); // Animate bitmaps
+  testanimate(logo_bmp, LOGO_WIDTH, LOGO_HEIGHT); // Animer des images bitmap
 }
 
 void loop() {
